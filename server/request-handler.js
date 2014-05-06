@@ -7,7 +7,7 @@
 
 var results = [];
 var msg = {};
-
+var rooms = {};
 
 
 exports.handler = function(request, response) {
@@ -36,6 +36,7 @@ exports.handler = function(request, response) {
     });
   };
   var writeMessage = function(request, response, callback){
+    // console.log(request.url, 'Request URL');
     response.writeHead(200, headers);
     response.end(JSON.stringify("OK"));
   };
@@ -45,16 +46,29 @@ exports.handler = function(request, response) {
       msg = JSON.parse(data.toString());
       msg.createdAt = new Date();
       msg.objectId = getUID();
-      results.push(msg);
-      console.log(results);
-      response.writeHead(200, headers);
+
+      if(!rooms[request.url]){
+        rooms[request.url] = {};
+      }
+      if(!rooms[request.url]['results']){
+        rooms[request.url]['results'] =[];
+      }
+
+      rooms[request.url]['results'].push(msg);
+      console.log(rooms[request.url]);
+      response.writeHead(201, headers);
       response.end(JSON.stringify(msg));
     });
   };
 
   var readMessage = function(request, response, callback){
-    response.writeHead(200, headers);
-    response.end(JSON.stringify({'results':results}));
+    if(!rooms[request.url]){
+      response.writeHead(404, headers);
+      response.end(JSON.stringify("Invalid Request"));
+    }else{
+      response.writeHead(200, headers);
+      response.end(JSON.stringify(rooms[request.url]));
+    }
   };
 
   var requestHandler = {
