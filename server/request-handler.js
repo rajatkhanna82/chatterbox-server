@@ -5,7 +5,7 @@
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
-var results = [];
+// var results = [];
 var msg = {};
 var rooms = {};
 
@@ -20,6 +20,9 @@ exports.handler = function(request, response) {
   // console.log("Serving request type " + request.method + " for url " + request.url);
   console.log("Serving request type " + request.method + " for url " + request.url);
 
+  var url =  request.url.slice(1);
+  var urlArr = url.split('/');
+ console.log(urlArr);
   //message storage
 
   var statusCode = 200;
@@ -47,37 +50,47 @@ exports.handler = function(request, response) {
       msg.createdAt = new Date();
       msg.objectId = getUID();
 
-      if(!rooms[request.url]){
-        rooms[request.url] = {};
+      if(!rooms[urlArr[1]]){
+        rooms[urlArr[1]] = {};
       }
-      if(!rooms[request.url]['results']){
-        rooms[request.url]['results'] =[];
+      if(!rooms[urlArr[1]]['results']){
+        rooms[urlArr[1]]['results'] =[];
       }
 
-      rooms[request.url]['results'].push(msg);
-      console.log(rooms[request.url]);
+      rooms[urlArr[1]]['results'].push(msg);
+      console.log(rooms[urlArr[1]]);
       response.writeHead(201, headers);
       response.end(JSON.stringify(msg));
     });
   };
 
   var readMessage = function(request, response, callback){
-    if(!rooms[request.url]){
-      response.writeHead(404, headers);
-      response.end(JSON.stringify("Invalid Request"));
-    }else{
+      if(!rooms[urlArr[1]]){
+        rooms[urlArr[1]] = {};
+      }
+      if(!rooms[urlArr[1]]['results']){
+        rooms[urlArr[1]]['results'] =[];
+      }
       response.writeHead(200, headers);
-      response.end(JSON.stringify(rooms[request.url]));
-    }
-  };
+      console.log(JSON.stringify({'rooms': Object.keys(rooms), 'results': rooms[urlArr[1]]['results']}));
+      response.end(JSON.stringify({'rooms': Object.keys(rooms), 'results': rooms[urlArr[1]]['results']}));
+    };
 
   var requestHandler = {
-    'OPTIONS' : writeMessage,
+    'OPTIONS': writeMessage,
     'POST': saveMessage,
     'GET': readMessage,
   };
 
-  requestHandler[request.method](request,response);
+  if(urlArr[0] !== 'classes'){
+     // console.log(request.url, 'Request URL');
+    response.writeHead(404, headers);
+    response.end(JSON.stringify("Invalid Request"));
+
+  }else{
+    requestHandler[request.method](request,response);
+  }
+
 
   // if (request.method === 'OPTIONS'){
   //   statusCode = 200;

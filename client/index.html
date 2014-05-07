@@ -9,6 +9,9 @@
     <!-- your scripts -->
     <script src="scripts/config.js"></script>
     <script src="scripts/app.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Advent+Pro:400,200' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,300italic' rel='stylesheet' type='text/css'>
   </head>
   <body>
     <script>
@@ -17,13 +20,22 @@
       });
     </script>
     <div id="main">
-      <h1>chatter<em>box</em></h1>
-      <!-- Your HTML goes here! -->
-      <div class="spinner"><img src="images/spiffygif_46x46.gif"></div>
       <form action="#" id="send" method="post">
         <input type="text" name="message" id="message"/>
         <input type="submit" name="submit" class="submit"/>
       </form>
+      <div id="rooms">
+        <form action="#" id="chatSend" method="post">
+          <input type="text" name="message" id="chatMessage" placeholder="create new room"/>
+          <input type="submit" name="submit" class="chatSubmit" style="display:none;"/>
+        </form>
+       <!--  <h2>rooms</h2> -->
+        <div id="safeRooms">
+        </div>
+      </div>
+      <h1>chatter<span>box</span></h1>
+      <!-- Your HTML goes here! -->
+      <div class="spinner"><img src="images/spiffygif_46x46.gif"></div>
       <div id="chats"></div>
     </div>
   </body>
