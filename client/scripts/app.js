@@ -15,11 +15,18 @@ app = {
 
       // cache some dom references
       app.$text = $('#message');
-
+      app.$room = $('#chatMessage');
       $('#send').on('submit', app.handleSubmit);
+      $('#chatSend').on('submit',app.handleCreateRoom);
+    },
+    handleCreateRoom: function(e){
+      e.preventDefault();
+      var roomName =  app.$room.val();
+      console.log(roomName);
+      app.$room.val('');
+      app.changeRoom(roomName);
 
     },
-
     loadAllMessages: function(){
      app.loadMsgs();
      setTimeout(app.loadAllMessages, 5000);
